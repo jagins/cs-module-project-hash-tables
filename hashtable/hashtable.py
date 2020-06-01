@@ -51,14 +51,6 @@ class HashTable:
         return count / len(self.list)
 
 
-    # def fnv1(self, key):
-    #     """
-    #     FNV-1 Hash, 64-bit
-
-    #     Implement this, and/or DJB2.
-    #     """
-
-
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
@@ -87,7 +79,6 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
         slot = self.hash_index(key)
         self.list[slot] = HashTableEntry(key, value)
 
