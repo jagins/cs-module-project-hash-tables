@@ -89,12 +89,6 @@ class HashTable:
             self.count += 1
             self.list[slot].insert(Node(key, value))
 
-        #if the load factor is > 0.7 resize
-        # loadFactor = self.get_load_factor()
-        # if loadFactor > 0.7:
-        #     self.resize(self.capacity * 2)
-        
-
     def delete(self, key):
         """
         Remove the value stored with the given key.
@@ -108,9 +102,6 @@ class HashTable:
 
         #search the linked list for the key
         searchResult = self.list[slot].find(key)
-        #if found delete it
-        # if self.get_load_factor() > 0.7:
-        #     self.resize(self.capacity * 2)
         
         if searchResult is not None:
             self.count -= 1
