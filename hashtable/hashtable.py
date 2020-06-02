@@ -1,12 +1,15 @@
-class HashTableEntry:
-    """
-    Linked List hash table key/value pair
-    """
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
-
+from linkedList import LinkedList
+from linkedList import Node
+# class HashTableEntry:
+#     """
+#     Linked List hash table key/value pair
+#     """
+#     def __init__(self, key, value):
+#         self.key = key
+#         self.value = value
+#         self.next = None
+#     def __str__(self):
+#         return f'{self.key}, {self.value}'
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -22,7 +25,8 @@ class HashTable:
 
     def __init__(self, capacity):
         self.capacity = capacity if capacity > 8 else MIN_CAPACITY
-        self.list = [None] * self.capacity
+        self.list = [LinkedList()] * self.capacity
+        self.count = 0
 
 
     def get_num_slots(self):
@@ -44,12 +48,7 @@ class HashTable:
 
         Implement this.
         """
-        count = 0
-        for value in self.list:
-            if value is not None:
-                count += 1
-        return count / len(self.list)
-
+        return self.count / len(self.list)
 
     def djb2(self, key):
         """
@@ -78,8 +77,18 @@ class HashTable:
 
         Implement this.
         """
+        #find the slot for the key
         slot = self.hash_index(key)
-        self.list[slot] = HashTableEntry(key, value)
+
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        #if the result is not None update the value othwerise make a new node with the entry
+        if searchResult is not None:
+            searchResult.value = value
+        else:
+            self.count += 1
+            self.list[slot].insert(Node(key, value))
+        
 
     def delete(self, key):
         """
@@ -89,8 +98,18 @@ class HashTable:
 
         Implement this.
         """
-        self.put(key, None)
+        #find the slot for the key
+        slot = self.hash_index(key)
 
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        #if found delete it
+        if searchResult is not None:
+            self.count -= 1
+            self.list[slot].delete(key)
+        #else return none
+        else:
+            return None
 
     def get(self, key):
         """
@@ -100,13 +119,15 @@ class HashTable:
 
         Implement this.
         """
+        #find the slot for the key
         slot = self.hash_index(key)
-        hash_entry = self.list[slot]
 
-        if hash_entry is not None:
-            return hash_entry.value
-        return None
-
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        if searchResult is not None:
+            return searchResult.value
+        else:
+            return None
 
     # def resize(self, new_capacity):
     #     """
