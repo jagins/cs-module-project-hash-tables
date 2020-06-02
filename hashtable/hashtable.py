@@ -88,6 +88,11 @@ class HashTable:
         else:
             self.count += 1
             self.list[slot].insert(Node(key, value))
+
+        #if the load factor is > 0.7 resize
+        # loadFactor = self.get_load_factor()
+        # if loadFactor > 0.7:
+        #     self.resize(self.capacity * 2)
         
 
     def delete(self, key):
@@ -104,12 +109,16 @@ class HashTable:
         #search the linked list for the key
         searchResult = self.list[slot].find(key)
         #if found delete it
+        # if self.get_load_factor() > 0.7:
+        #     self.resize(self.capacity * 2)
+        
         if searchResult is not None:
             self.count -= 1
-            self.list[slot].delete(key)
+            return self.list[slot].delete(searchResult)
         #else return none
         else:
-            return None
+            return searchResult
+        
 
     def get(self, key):
         """
@@ -129,16 +138,33 @@ class HashTable:
         else:
             return None
 
-    # def resize(self, new_capacity):
-    #     """
-    #     Changes the capacity of the hash table and
-    #     rehashes all key/value pairs.
+    def resize(self, new_capacity):
+        """
+        Changes the capacity of the hash table and
+        rehashes all key/value pairs.
 
-    #     Implement this.
-    #     """
-    #     # Your code here
-
-
+        Implement this.
+        """
+        #make a new list with the new capacity
+        new_list = [LinkedList()] * new_capacity
+        self.count = 0
+        #loop through the old list
+        for i in self.list:
+            #get a reference to the linked list
+            ll = i
+            #traverse the linked list
+            current = ll.head
+            while current is not None:
+                #rehash all the keys
+                slot = self.djb2(current.key) % new_capacity
+                #insert into new list
+                self.count += 1
+                new_list[slot].insert(Node(current.key, current.value))
+                current = current.next
+        #update the capcity
+        self.capacity = new_capacity
+        #make self.list = new_list
+        self.list = new_list
 
 if __name__ == "__main__":
     ht = HashTable(8)
@@ -155,6 +181,27 @@ if __name__ == "__main__":
     ht.put("line_10", "Long time the manxome foe he sought--")
     ht.put("line_11", "So rested he by the Tumtum tree")
     ht.put("line_12", "And stood awhile in thought.")
+
+
+     
+    ht.delete("line_1")
+    ht.delete("line_2")
+    ht.delete("line_3")
+    ht.delete("line_4")
+    ht.delete("line_5")
+
+    ht.get("line_1")
+    ht.get("line_2")
+    ht.get("line_3")
+    ht.get("line_4")
+    ht.get("line_5")
+    ht.get("line_6")
+    ht.get("line_7")
+    ht.get("line_8")
+    ht.get("line_9")
+    ht.get("line_10")
+    ht.get("line_11")
+    ht.get("line_12")
 
     print("")
 

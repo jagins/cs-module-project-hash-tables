@@ -33,10 +33,10 @@ class LinkedList:
                 current = current.next
         return None
     
-    def delete(self, value):
+    def delete(self, node):
         current = self.head
 
-        if current.key == value:
+        if current.key == node.key:
             self.head = self.head.next
             return current
         
@@ -44,9 +44,10 @@ class LinkedList:
         current = current.next
 
         while current is not None:
-            if current.value == value:
+            if current.key == node.key:
                 prev.next = current.next
                 return current
             else:
                 prev = prev.next
                 current = current.next
+        return None
