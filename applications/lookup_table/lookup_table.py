@@ -19,12 +19,10 @@ def slowfun(x, y):
     key = (x, y)
     if key not in cache:
         cache[key] = slowfun_too_slow(x, y)
-    else:
-        return cache[key]
+    return cache[key]
 
 
 def build_lookup_table():
-    print('building')
     for i in range(50000):
         x = random.randrange(2,14)
         y = random.randrange(3,6)
