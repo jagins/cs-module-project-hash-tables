@@ -4,9 +4,9 @@ def no_dups(s):
     string = s.split()
     new_array = []
     sepeartor = " "
-    for i in range(len(string)):
-        if string[i] not in dictionary:
-            dictionary[string[i]] = i
+    for i in string:
+        if i not in dictionary:
+            dictionary[i] = i
     
     for word in string:
         if word in dictionary:
