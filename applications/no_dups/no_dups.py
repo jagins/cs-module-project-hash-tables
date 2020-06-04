@@ -7,11 +7,9 @@ def no_dups(s):
     for i in string:
         if i not in dictionary:
             dictionary[i] = i
-    
-    for word in string:
-        if word in dictionary:
-            if word not in new_array:
-                new_array.append(word)
+
+    for word in dictionary:
+      new_array.append(word)
     return sepeartor.join(new_array)
 
 if __name__ == "__main__":
