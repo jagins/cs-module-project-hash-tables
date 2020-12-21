@@ -1,7 +1,16 @@
 def no_dups(s):
-    # Your code here
+    dictionary = {}
 
+    string = s.split()
+    new_array = []
+    sepeartor = " "
+    for i in string:
+        if i not in dictionary:
+            dictionary[i] = i
 
+    for word in dictionary:
+      new_array.append(word)
+    return sepeartor.join(new_array)
 
 if __name__ == "__main__":
     print(no_dups(""))

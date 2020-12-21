@@ -1,12 +1,15 @@
-class HashTableEntry:
-    """
-    Linked List hash table key/value pair
-    """
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
-
+from linkedList import LinkedList
+from linkedList import Node
+# class HashTableEntry:
+#     """
+#     Linked List hash table key/value pair
+#     """
+#     def __init__(self, key, value):
+#         self.key = key
+#         self.value = value
+#         self.next = None
+#     def __str__(self):
+#         return f'{self.key}, {self.value}'
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -21,7 +24,9 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        # Your code here
+        self.capacity = capacity if capacity > 8 else MIN_CAPACITY
+        self.list = [LinkedList()] * self.capacity
+        self.count = 0
 
 
     def get_num_slots(self):
@@ -34,7 +39,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return len(self.list)
 
 
     def get_load_factor(self):
@@ -43,18 +48,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
-
-    def fnv1(self, key):
-        """
-        FNV-1 Hash, 64-bit
-
-        Implement this, and/or DJB2.
-        """
-
-        # Your code here
-
+        return self.count / len(self.list)
 
     def djb2(self, key):
         """
@@ -62,7 +56,10 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381
+        for c in key:
+            hash = (hash * 33) + ord(c)
+        return hash
 
 
     def hash_index(self, key):
@@ -70,7 +67,6 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -81,8 +77,17 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        #find the slot for the key
+        slot = self.hash_index(key)
 
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        #if the result is not None update the value othwerise make a new node with the entry
+        if searchResult is not None:
+            searchResult.value = value
+        else:
+            self.count += 1
+            self.list[slot].insert(Node(key, value))
 
     def delete(self, key):
         """
@@ -92,8 +97,19 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        #find the slot for the key
+        slot = self.hash_index(key)
 
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        
+        if searchResult is not None:
+            self.count -= 1
+            return self.list[slot].delete(searchResult)
+        #else return none
+        else:
+            return searchResult
+        
 
     def get(self, key):
         """
@@ -103,8 +119,15 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        #find the slot for the key
+        slot = self.hash_index(key)
 
+        #search the linked list for the key
+        searchResult = self.list[slot].find(key)
+        if searchResult is not None:
+            return searchResult.value
+        else:
+            return None
 
     def resize(self, new_capacity):
         """
@@ -113,9 +136,26 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
-
+        #make a new list with the new capacity
+        new_list = [LinkedList()] * new_capacity
+        self.count = 0
+        #loop through the old list
+        for i in self.list:
+            #get a reference to the linked list
+            ll = i
+            #traverse the linked list
+            current = ll.head
+            while current is not None:
+                #rehash all the keys
+                slot = self.djb2(current.key) % new_capacity
+                #insert into new list
+                self.count += 1
+                new_list[slot].insert(Node(current.key, current.value))
+                current = current.next
+        #update the capcity
+        self.capacity = new_capacity
+        #make self.list = new_list
+        self.list = new_list
 
 if __name__ == "__main__":
     ht = HashTable(8)
@@ -132,6 +172,27 @@ if __name__ == "__main__":
     ht.put("line_10", "Long time the manxome foe he sought--")
     ht.put("line_11", "So rested he by the Tumtum tree")
     ht.put("line_12", "And stood awhile in thought.")
+
+
+     
+    ht.delete("line_1")
+    ht.delete("line_2")
+    ht.delete("line_3")
+    ht.delete("line_4")
+    ht.delete("line_5")
+
+    ht.get("line_1")
+    ht.get("line_2")
+    ht.get("line_3")
+    ht.get("line_4")
+    ht.get("line_5")
+    ht.get("line_6")
+    ht.get("line_7")
+    ht.get("line_8")
+    ht.get("line_9")
+    ht.get("line_10")
+    ht.get("line_11")
+    ht.get("line_12")
 
     print("")
 
